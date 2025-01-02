@@ -245,16 +245,14 @@
 
         function toggleLED() {
             const checkbox = document.getElementById('toggle');
-            const status = document.getElementById('status');
             const state = checkbox.checked ? "on" : "off";
             const xhr = new XMLHttpRequest();
-            xhr.open("POST", `http://92.237.40.190:65432`, true);
+            xhr.open("POST", `http://92.237.40.190:65432/led`, true);
             xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
             xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4) {
                     if(xhr.status === 200){
                         console.log('Response received:', xhr.responseText);
-                        status.innerText = state.toUpperCase();
                         if (state === "off") {
                             gtag('event', 'toggle', {
                                 'event_category': 'LED',
@@ -263,12 +261,9 @@
                             });
                         }
                     } else {
-                        console.error('Error:', xhr.statusText);
+                        console.error('Error here:', xhr.statusText);
                     }
                 }
-            };
-            xhr.onerror = function () {
-                console.error('Request failed');
             };
             xhr.send(`state=${state}`);
         }
