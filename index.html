@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<!-- Google tag (gtag.js) -->
+    <!-- Google tag (gtag.js) -->
 	<script async src="https://www.googletagmanager.com/gtag/js?id=G-2XDYD5J1YD"></script>
 	<script>
 	  window.dataLayer = window.dataLayer || [];
 	  function gtag(){dataLayer.push(arguments);}
 	  gtag('js', new Date());
-	
 	  gtag('config', 'G-2XDYD5J1YD');
 	</script>
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Have You Tried Turning It Off And On Again</title>
@@ -163,24 +163,39 @@
                 opacity: 0;
             }
         }
-
+        @font-face {
+            font-family: 'ITCrowd';
+            src: url('digital-7.ttf'); /* Style-7 - http://www.styleseven.com/ */
+        }
         .text-above, .text-below {
-            font-size: 2em;
+            font-size: 3em;
             margin: 10px 0;
             text-align: center;
         }
 
         .text-above {
             color: black;
+            font-family: 'ITCrowd',monospace,'Courier New', Courier;
         }
 
         .text-below {
             color: white;
+            font-family: 'ITCrowd',monospace,'Courier New', Courier;
         }
 
         .highlight {
             font-weight: bold;
-            font-size: 1.2em;
+            font-size: 1.3em;
+        }
+
+        /* Style for the Pi symbol link */
+        .pi-link {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            color: white;
+            text-decoration: none;
+            font-size: 15px;
         }
     </style>
 </head>
@@ -190,7 +205,7 @@
     </div>
     <br>
     <label class="switch">
-        <input type="checkbox" id="toggle" checked>
+        <input type="checkbox" id="toggle" onchange="toggleLED()" checked>
         <div class="button">
             <div class="light"></div>
             <div class="dots"></div>
@@ -203,6 +218,10 @@
     <div class="text-below" id="text-below">
         And On Again
     </div>
+
+    <!-- Pi symbol link -->
+    <a href="https://www.instagram.com/n3rding/" class="pi-link">π</a>
+
 
     <script>
         const checkbox = document.getElementById('toggle');
@@ -223,7 +242,31 @@
 
         highlightFirstLetter('text-above');
         highlightFirstLetter('text-below');
+
+        // Replace with your ESP32 IP address
+        const theInternet = "http://192.168.25.62:81";
+
+        function toggleLED() {
+            const checkbox = document.getElementById('toggle');
+            const status = document.getElementById('status');
+            const state = checkbox.checked ? "on" : "off";
+            const xhr = new XMLHttpRequest();
+            xhr.open("POST", `${theInternet}/led`, true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    status.innerText = state.toUpperCase();
+                    if (state === "off") {
+                        gtag('event', 'toggle', {
+                            'event_category': 'LED',
+                            'event_label': 'LED Toggle',
+                            'value': 'off'
+                        });
+                    }
+                }
+            };
+            xhr.send(`state=${state}`);
+        }
     </script>
-	
 </body>
 </html>
