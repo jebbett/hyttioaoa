@@ -243,21 +243,26 @@
         highlightFirstLetter('text-above');
         highlightFirstLetter('text-below');
 
-        // Replace with your ESP32 IP address
-        const theInternet = "http://92.237.40.190:81";
-
         function toggleLED() {
             const checkbox = document.getElementById('toggle');
             const status = document.getElementById('status');
             const state = checkbox.checked ? "on" : "off";
             const xhr = new XMLHttpRequest();
-            xhr.open("POST", `${theInternet}`, true);
+            xhr.open("POST", `http://92.237.40.190:81`, true);
             xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
             xhr.onreadystatechange = function () {
-                if (xhr.readyState === 4 && xhr.status === 200) {
-                    status.innerText = state.toUpperCase();
-                }
-            };
+                if (xhr.readyState == 4) {
+            if (xhr.status == 200) {
+                console.log('Response received:', xhr.responseText);
+            } else {
+                console.error('Error:', xhr.statusText);
+            }
+        }
+    };
+    xhr.onerror = function () {
+        console.error('Request failed');
+    };
+
             xhr.send(`state=${state}`);
         }
     </script>
