@@ -248,21 +248,28 @@
             const status = document.getElementById('status');
             const state = checkbox.checked ? "on" : "off";
             const xhr = new XMLHttpRequest();
-            xhr.open("POST", `http://92.237.40.190:81`, true);
+            xhr.open("POST", `http://92.237.40.190:65432`, true);
             xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
             xhr.onreadystatechange = function () {
-                if (xhr.readyState == 4) {
-            if (xhr.status == 200) {
-                console.log('Response received:', xhr.responseText);
-            } else {
-                console.error('Error:', xhr.statusText);
-            }
-        }
-    };
-    xhr.onerror = function () {
-        console.error('Request failed');
-    };
-
+                if (xhr.readyState === 4) {
+                    if(xhr.status === 200){
+                        console.log('Response received:', xhr.responseText);
+                        status.innerText = state.toUpperCase();
+                        if (state === "off") {
+                            gtag('event', 'toggle', {
+                                'event_category': 'LED',
+                                'event_label': 'LED Toggle',
+                                'value': 'off'
+                            });
+                        }
+                    } else {
+                        console.error('Error:', xhr.statusText);
+                    }
+                }
+            };
+            xhr.onerror = function () {
+                console.error('Request failed');
+            };
             xhr.send(`state=${state}`);
         }
     </script>
