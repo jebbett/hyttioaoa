@@ -7,7 +7,7 @@
 	  window.dataLayer = window.dataLayer || [];
 	  function gtag(){dataLayer.push(arguments);}
 	  gtag('js', new Date());
-	  gtag('config', 'G-2XDYD5J1YD');
+	  gtag('config', 'G-2XDYD5J1YD', { 'debug_mode':true });
 	</script>
     <link rel="shortcut icon" type="image/jpg" href="favicon.png"/>
     <meta charset="UTF-8">
@@ -253,17 +253,17 @@
             xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4) {
                     if(xhr.status === 200){
-                        console.log('Response received:', xhr.responseText);
+                        //console.log('Response received:', xhr.responseText);
                         if (state === "off") {
                             gtag('event', 'toggle', {
                                 'event_category': 'LED',
                                 'event_label': 'LED Toggle',
                                 'value': 'off'
                             });
-			    console.log('GTag Sent');
+			    //console.log('GTag Sent');
                         }
                     } else {
-                        console.error('Error here:', xhr.statusText);
+                        //console.error('Error here:', xhr.statusText);
                     }
                 }
             };
