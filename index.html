@@ -248,7 +248,7 @@
             const checkbox = document.getElementById('toggle');
             const state = checkbox.checked ? "on" : "off";
             const xhr = new XMLHttpRequest();
-            xhr.open("POST", `http://led.hyttioaoa.com:65432/led`, true);
+            xhr.open("POST", `https://led.hyttioaoa.com/led`, true);
             xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
             xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4) {
