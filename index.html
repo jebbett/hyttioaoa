@@ -225,6 +225,7 @@
 
 
     <script>
+        let offCounter = 0;
         const checkbox = document.getElementById('toggle');
         checkbox.addEventListener('change', () => {
             document.body.style.backgroundColor = checkbox.checked ? 'white' : 'black';
@@ -255,6 +256,10 @@
                     if(xhr.status === 200){
                         //console.log('Response received:', xhr.responseText);
                         if (state === "off") {
+                            offCounter++;
+                            if (offCounter >= 10) {
+                                window.location.href = 'blinkenlights.html';
+                            }
                             gtag('event', 'toggle', {
                                 'event_category': 'LED',
                                 'event_label': 'LED Toggle',
