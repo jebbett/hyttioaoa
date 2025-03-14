@@ -25,7 +25,7 @@
     var fetchInterval = parseInt(urlParams.get('fetchInterval')) || 40; // Interval to fetch new content in seconds (default is 30 seconds)
     var drawInterval = parseInt(urlParams.get('drawInterval')) || 100; // Interval to draw the canvas in milliseconds (100ms)
     var maxContentLength = parseInt(urlParams.get('maxContentLength')) || 100; // Maximum length of posts and comments (100 characters)
-    var subreddit = urlParams.get('subreddit') || 'new'; // Subreddit to fetch posts and comments from
+    var subreddit = urlParams.get('subreddit') || 'all'; // Subreddit to fetch posts and comments from
 
     // Convert fetchInterval from seconds to milliseconds
     fetchInterval *= 1000;
