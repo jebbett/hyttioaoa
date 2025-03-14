@@ -23,8 +23,8 @@
     var fontSize = parseInt(urlParams.get('fontSize')) || 20; // Font size for the text
     var fadeAlpha = parseFloat(urlParams.get('fadeAlpha')) || 0.03; // Alpha value for the fade effect (lower values make the fade slower)
     var fetchInterval = parseInt(urlParams.get('fetchInterval')) || 40; // Interval to fetch new content in seconds (default is 30 seconds)
-    var drawInterval = parseInt(urlParams.get('drawInterval')) || 100; // Interval to draw the canvas in milliseconds (100ms)
-    var maxContentLength = parseInt(urlParams.get('maxContentLength')) || 100; // Maximum length of posts and comments (100 characters)
+    var drawInterval = parseInt(urlParams.get('drawInterval')) || 100; // Interval to draw the drop in milliseconds (100ms)
+    var maxContentLength = parseInt(urlParams.get('maxContentLength')) || 100; // Trim length of posts and comments (100 characters)
     var subreddit = urlParams.get('subreddit') || 'all'; // Subreddit to fetch posts and comments from
 
     // Convert fetchInterval from seconds to milliseconds
