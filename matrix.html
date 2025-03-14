@@ -21,11 +21,11 @@
     // Get URL parameters or set default values
     var urlParams = new URLSearchParams(window.location.search);
     var fontSize = parseInt(urlParams.get('fontSize')) || 20; // Font size for the text
-    var fadeAlpha = parseFloat(urlParams.get('fadeAlpha')) || 0.03; // Alpha value for the fade effect (lower values make the fade slower)
-    var fetchInterval = parseInt(urlParams.get('fetchInterval')) || 30; // Interval to fetch new content in seconds (default is 60 seconds)
+    var fadeAlpha = parseFloat(urlParams.get('fadeAlpha')) || 0.05; // Alpha value for the fade effect (lower values make the fade slower)
+    var fetchInterval = parseInt(urlParams.get('fetchInterval')) || 60; // Interval to fetch new content in seconds (default is 60 seconds)
     var drawInterval = parseInt(urlParams.get('drawInterval')) || 100; // Interval to draw the canvas in milliseconds (100ms)
     var maxContentLength = parseInt(urlParams.get('maxContentLength')) || 100; // Maximum length of posts and comments (100 characters)
-    var subreddit = urlParams.get('subreddit') || 'all'; // Subreddit to fetch posts and comments from
+    var subreddit = urlParams.get('subreddit') || 'bristol'; // Subreddit to fetch posts and comments from
 
     // Convert fetchInterval from seconds to milliseconds
     fetchInterval *= 1000;
@@ -132,7 +132,7 @@
         var post = activePosts[i];
         if (post.charIndex < post.content.length) {
           var text = post.content[post.charIndex];
-          var x = post.x;
+          var x = post.x + (fontSize - ctx.measureText(text).width) / 2; // Center align text in the column
           var y = post.y * fontSize;
 
           ctx.fillStyle = '#0f0';
