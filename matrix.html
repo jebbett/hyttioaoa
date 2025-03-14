@@ -60,7 +60,7 @@
       var newPostsCount = 0;
 
       // Fetch posts
-      fetch(`https://www.reddit.com/r/${subreddit}/new.json`)
+      fetch(`https://www.reddit.com/r/${subreddit}/new.json?limit=50`)
         .then(response => response.json())
         .then(data => {
           data.data.children.forEach(post => {
@@ -81,7 +81,7 @@
         .catch(error => console.error('Error fetching Reddit posts:', error));
 
       // Fetch comments
-      fetch(`https://www.reddit.com/r/${subreddit}/comments.json`)
+      fetch(`https://www.reddit.com/r/${subreddit}/comments.json?limit=50`)
         .then(response => response.json())
         .then(data => {
           data.data.children.forEach(comment => {
