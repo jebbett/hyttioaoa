@@ -22,9 +22,9 @@
     var urlParams = new URLSearchParams(window.location.search);
     var fontSize = parseInt(urlParams.get('fontSize')) || 20; // Font size for the text
     var fadeAlpha = parseFloat(urlParams.get('fadeAlpha')) || 0.03; // Alpha value for the fade effect (lower values make the fade slower)
-    var fetchInterval = parseInt(urlParams.get('fetchInterval')) || 40; // Interval to fetch new content in seconds (default is 30 seconds)
-    var drawInterval = parseInt(urlParams.get('drawInterval')) || 100; // Interval to draw the drop in milliseconds (100ms)
-    var maxContentLength = parseInt(urlParams.get('maxContentLength')) || 100; // Trim length of posts and comments (100 characters)
+    var fetchInterval = parseInt(urlParams.get('fetchInterval')) || 30; // Interval to fetch new content in seconds (default is 60 seconds)
+    var drawInterval = parseInt(urlParams.get('drawInterval')) || 100; // Interval to draw the canvas in milliseconds (100ms)
+    var maxContentLength = parseInt(urlParams.get('maxContentLength')) || 100; // Maximum length of posts and comments (100 characters)
     var subreddit = urlParams.get('subreddit') || 'all'; // Subreddit to fetch posts and comments from
 
     // Convert fetchInterval from seconds to milliseconds
@@ -68,7 +68,6 @@
               // Add post title to the queue, truncated to maxContentLength
               postsQueue.push({
                 content: post.data.title.substring(0, maxContentLength),
-                url: 'https://www.reddit.com' + post.data.permalink,
                 charIndex: 0,
                 y: 1,
                 x: Math.floor(Math.random() * columns) * fontSize,
@@ -90,7 +89,6 @@
               // Add comment body to the queue, truncated to maxContentLength
               postsQueue.push({
                 content: comment.data.body.substring(0, maxContentLength),
-                url: 'https://www.reddit.com' + comment.data.permalink,
                 charIndex: 0,
                 y: 1,
                 x: Math.floor(Math.random() * columns) * fontSize,
@@ -151,21 +149,6 @@
 
     // Loop the animation
     setInterval(draw, drawInterval); // Drawing every 100ms
-
-    // Event listener for clicks
-    canvas.addEventListener('click', function(event) {
-      var x = event.clientX;
-      var y = event.clientY;
-
-      for (var i = 0; i < activePosts.length; i++) {
-        var post = activePosts[i];
-        var textWidth = ctx.measureText(post.content[post.charIndex]).width;
-        if (x >= post.x && x <= post.x + textWidth && y >= (post.y - 1) * fontSize && y <= post.y * fontSize) {
-          window.open(post.url, '_blank');
-          return;
-        }
-      }
-    });
   </script>
 </body>
 </html>
