@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reddit Titles and Comments Canvas</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background-color: black;
+    }
+    canvas {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <canvas></canvas>
+  <script>
+    // Get URL parameters or set default values
+    var urlParams = new URLSearchParams(window.location.search);
+    var fontSize = parseInt(urlParams.get('fontSize')) || 20; // Font size for the text
+    var fadeAlpha = parseFloat(urlParams.get('fadeAlpha')) || 0.03; // Alpha value for the fade effect (lower values make the fade slower)
+    var fetchInterval = parseInt(urlParams.get('fetchInterval')) || 40; // Interval to fetch new content in seconds (default is 30 seconds)
+    var drawInterval = parseInt(urlParams.get('drawInterval')) || 100; // Interval to draw the canvas in milliseconds (100ms)
+    var maxContentLength = parseInt(urlParams.get('maxContentLength')) || 100; // Maximum length of posts and comments (100 characters)
+    var subreddit = urlParams.get('subreddit') || 'new'; // Subreddit to fetch posts and comments from
+
+    // Convert fetchInterval from seconds to milliseconds
+    fetchInterval *= 1000;
+
+    // Rate limit check for fetchInterval
+    if (fetchInterval < 20000) { // 20 seconds in milliseconds
+      fetchInterval = 20000;
+    }
+
+    // Initialising the canvas
+    var canvas = document.querySelector('canvas'),
+        ctx = canvas.getContext('2d');
+
+    // Setting the width and height of the canvas
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    // Setting up the columns
+    var columns = canvas.width / fontSize;
+
+    // Setting the font size in the context
+    ctx.font = fontSize + 'px Arial';
+
+    // Setting up the drops
+    var postsQueue = [];
+    var displayedPosts = new Set();
+    var activePosts = [];
+    var postStartDelay = 1000; // Initial delay between starting to display each post in milliseconds (1 second)
+
+    // Fetch Reddit posts and comments
+    function fetchRedditContent() {
+      var newPostsCount = 0;
+
+      // Fetch posts
+      fetch(`https://www.reddit.com/r/${subreddit}/new.json`)
+        .then(response => response.json())
+        .then(data => {
+          data.data.children.forEach(post => {
+            if (!displayedPosts.has(post.data.id)) {
+              // Add post title to the queue, truncated to maxContentLength
+              postsQueue.push({
+                content: post.data.title.substring(0, maxContentLength),
+                url: 'https://www.reddit.com' + post.data.permalink,
+                charIndex: 0,
+                y: 1,
+                x: Math.floor(Math.random() * columns) * fontSize,
+                startTime: Date.now()
+              });
+              displayedPosts.add(post.data.id);
+              newPostsCount++;
+            }
+          });
+        })
+        .catch(error => console.error('Error fetching Reddit posts:', error));
+
+      // Fetch comments
+      fetch(`https://www.reddit.com/r/${subreddit}/comments.json`)
+        .then(response => response.json())
+        .then(data => {
+          data.data.children.forEach(comment => {
+            if (!displayedPosts.has(comment.data.id)) {
+              // Add comment body to the queue, truncated to maxContentLength
+              postsQueue.push({
+                content: comment.data.body.substring(0, maxContentLength),
+                url: 'https://www.reddit.com' + comment.data.permalink,
+                charIndex: 0,
+                y: 1,
+                x: Math.floor(Math.random() * columns) * fontSize,
+                startTime: Date.now()
+              });
+              displayedPosts.add(comment.data.id);
+              newPostsCount++;
+            }
+          });
+
+          // Adjust the postStartDelay based on the number of new posts and comments
+          if (newPostsCount > 0) {
+            postStartDelay = fetchInterval / newPostsCount;
+          }
+        })
+        .catch(error => console.error('Error fetching Reddit comments:', error));
+    }
+
+    // Initial fetch
+    fetchRedditContent();
+
+    // Periodically fetch new posts and comments
+    setInterval(fetchRedditContent, fetchInterval); // Fetch new content every 60 seconds
+
+    // Setting up the draw function
+    function draw() {
+      ctx.fillStyle = `rgba(0, 0, 0, ${fadeAlpha})`; // Slower fade effect with lower alpha value
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      var currentTime = Date.now();
+
+      // Start new posts from the queue at the adjusted interval
+      while (postsQueue.length > 0 && (activePosts.length === 0 || currentTime - activePosts[activePosts.length - 1].startTime >= postStartDelay)) {
+        var post = postsQueue.shift();
+        post.startTime = currentTime;
+        activePosts.push(post);
+      }
+
+      // Draw active posts
+      for (var i = 0; i < activePosts.length; i++) {
+        var post = activePosts[i];
+        if (post.charIndex < post.content.length) {
+          var text = post.content[post.charIndex];
+          var x = post.x;
+          var y = post.y * fontSize;
+
+          ctx.fillStyle = '#0f0';
+          ctx.fillText(text, x, y);
+
+          post.y++;
+          post.charIndex++;
+        }
+      }
+
+      // Remove posts that have been fully displayed
+      activePosts = activePosts.filter(post => post.charIndex < post.content.length);
+    }
+
+    // Loop the animation
+    setInterval(draw, drawInterval); // Drawing every 100ms
+
+    // Event listener for clicks
+    canvas.addEventListener('click', function(event) {
+      var x = event.clientX;
+      var y = event.clientY;
+
+      for (var i = 0; i < activePosts.length; i++) {
+        var post = activePosts[i];
+        var textWidth = ctx.measureText(post.content[post.charIndex]).width;
+        if (x >= post.x && x <= post.x + textWidth && y >= (post.y - 1) * fontSize && y <= post.y * fontSize) {
+          window.open(post.url, '_blank');
+          return;
+        }
+      }
+    });
+  </script>
+</body>
+</html>
