@@ -53,7 +53,7 @@
     var postsQueue = [];
     var displayedPosts = new Set();
     var activePosts = [];
-    var postStartDelay = 1000; // Initial delay between starting to display each post in milliseconds (1 second)
+    var postStartDelay = 300; // Initial delay between starting to display each post in milliseconds (1 second)
 
     // Fetch Reddit posts and comments
     function fetchRedditContent() {
@@ -148,7 +148,7 @@
     }
 
     // Loop the animation
-    setInterval(draw, drawInterval); // Drawing every 100ms
+    setInterval(draw, drawInterval);
   </script>
 </body>
 </html>
