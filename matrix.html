@@ -22,8 +22,8 @@
     var urlParams = new URLSearchParams(window.location.search);
     var fontSize = parseInt(urlParams.get('fontSize')) || 20; // Font size for the text
     var fadeAlpha = parseFloat(urlParams.get('fadeAlpha')) || 0.04; // Alpha value for the fade effect (lower values make the fade slower)
-    var fetchInterval = parseInt(urlParams.get('fetchInterval')) || 60; // Interval to fetch new content in seconds
-    var drawInterval = parseInt(urlParams.get('drawInterval')) || 50; // Interval to draw the canvas in milliseconds
+    var fetchInterval = parseInt(urlParams.get('fetchInterval')) || 40; // Interval to fetch new content in seconds
+    var drawInterval = parseInt(urlParams.get('drawInterval')) || 50; // Interval to draw the drops in milliseconds
     var maxContentLength = parseInt(urlParams.get('maxContentLength')) || 100; // Maximum length of posts and comments as shouldn't need to render off screen.
     var numPosts = parseInt(urlParams.get('numPosts')) || 20; // Number of posts to grab
     var numComments = parseInt(urlParams.get('numComments')) || 100; // Number of posts to grab 
@@ -55,8 +55,11 @@
     var postsQueue = [];
     var displayedPosts = new Set();
     var activePosts = [];
-    var postStartDelay = 300; // Initial delay between starting to display each post in milliseconds (1 second)
+    var postStartDelay = 300; // Initial delay between starting to display each post in milliseconds
     var maxDisplayedPosts = numPosts + numComments + 50; // Maximum number of displayed posts to keep track of, 50 adds a buffer
+
+    // Track the last time a post was started
+    var lastPostStartTime = 0;
 
     // Function to ensure the displayedPosts set does not exceed maxDisplayedPosts
     function maintainDisplayedPostsSize() {
@@ -79,8 +82,7 @@
                 content: post.data.title.substring(0, maxContentLength),
                 charIndex: 0,
                 y: 1,
-                x: Math.floor(Math.random() * columns) * fontSize,
-                startTime: Date.now()
+                x: Math.floor(Math.random() * columns) * fontSize
               });
               displayedPosts.add(post.data.id);
               // Maintain the size of displayedPosts
@@ -101,8 +103,7 @@
                 content: comment.data.body.substring(0, maxContentLength),
                 charIndex: 0,
                 y: 1,
-                x: Math.floor(Math.random() * columns) * fontSize,
-                startTime: Date.now()
+                x: Math.floor(Math.random() * columns) * fontSize
               });
               displayedPosts.add(comment.data.id);
               // Maintain the size of displayedPosts
@@ -116,7 +117,7 @@
       Promise.all([fetchPosts, fetchComments]).then(() => {
         // Adjust the postStartDelay based on the length of the postsQueue
         if (postsQueue.length > 0) {
-          postStartDelay = (fetchInterval - 2) / postsQueue.length;
+          postStartDelay = (fetchInterval - 2000) / postsQueue.length;
           console.log(`postsQueue length: ${postsQueue.length}, postStartDelay: ${postStartDelay}, fetchInterval: ${fetchInterval}`);
         }
       });
@@ -136,10 +137,11 @@
       var currentTime = Date.now();
 
       // Start new posts from the queue at the adjusted interval
-      while (postsQueue.length > 0 && (activePosts.length === 0 || currentTime - activePosts[activePosts.length - 1].startTime >= postStartDelay)) {
+      if (postsQueue.length > 0 && (currentTime - lastPostStartTime >= postStartDelay)) {
         var post = postsQueue.shift();
         post.startTime = currentTime;
         activePosts.push(post);
+        lastPostStartTime = currentTime;
       }
 
       // Draw active posts
