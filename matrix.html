@@ -36,7 +36,7 @@
     var drawInterval = parseInt(urlParams.get('drawInterval')) || 50; // Interval to draw the drops in milliseconds
     var maxContentLength = parseInt(urlParams.get('maxContentLength')) || 100; // Maximum length of posts and comments as shouldn't need to render off screen.
     var numPosts = parseInt(urlParams.get('numPosts')) || 20; // Number of posts to grab
-    var numComments = parseInt(urlParams.get('numComments')) || 100; // Number of posts to grab 
+    var numComments = parseInt(urlParams.get('numComments')) || 100; // Number of posts to grab (Max:100)
     var subreddit = urlParams.get('subreddit') || 'all'; // Subreddit to fetch posts and comments from
 
     // Convert fetchInterval from seconds to milliseconds
