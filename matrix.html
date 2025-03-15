@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Reddit Titles and Comments Canvas</title>
+  <title>Reddit vs The Matrix</title>
   <style>
     body {
       margin: 0;
@@ -13,16 +13,26 @@
     canvas {
       display: block;
     }
+    .bottom-right-link {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      color: #0f0;
+      text-decoration: none;
+      font-family: Arial, sans-serif;
+      font-size: 10px;
+    }
   </style>
 </head>
 <body>
   <canvas></canvas>
+  <a href="https://www.n3rding.com" class="bottom-right-link" target="_blank">n3rding</a>
   <script>
     // Get URL parameters or set default values
     var urlParams = new URLSearchParams(window.location.search);
     var fontSize = parseInt(urlParams.get('fontSize')) || 20; // Font size for the text
     var fadeAlpha = parseFloat(urlParams.get('fadeAlpha')) || 0.04; // Alpha value for the fade effect (lower values make the fade slower)
-    var fetchInterval = parseInt(urlParams.get('fetchInterval')) || 40; // Interval to fetch new content in seconds
+    var fetchInterval = parseInt(urlParams.get('fetchInterval')) || 60; // Interval to fetch new content in seconds
     var drawInterval = parseInt(urlParams.get('drawInterval')) || 50; // Interval to draw the drops in milliseconds
     var maxContentLength = parseInt(urlParams.get('maxContentLength')) || 100; // Maximum length of posts and comments as shouldn't need to render off screen.
     var numPosts = parseInt(urlParams.get('numPosts')) || 20; // Number of posts to grab
