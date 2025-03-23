@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Welcome to The Reddit</title>
+		<style>
+			body {
+				background-color: black;
+				color: white;
+				font-family: Courier New,Courier,monospace;
+				font-weight: bold
+				margin: 0;
+				overflow: hidden;
+				text-shadow: 0 0 5px green, 0 0 10px green, 0 0 15px green, 0 0 20px green;
+			}
+			canvas {
+				position: absolute;
+				top: 0;
+				left: 0;
+				z-index: -1;
+			}
+			.container {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				height: 100vh;
+				position: relative;
+				z-index: 1;
+			}
+			form {
+				display: grid;
+				grid-template-columns: 1fr 1fr 1fr;
+				gap: 10px;
+				align-items: center;
+			}
+			label, input[type=range], .value {
+				font-size: 20px;
+				color: white;
+				text-shadow: 0 0 5px green, 0 0 10px green, 0 0 15px green, 0 0 20px green;
+			}
+			input[type=range] {
+				width: 100%;
+				-webkit-appearance: none;
+				appearance: none;
+				background: black;
+				outline: none;
+				box-shadow: 0 0 20px green; 
+			}
+			input[type=range]::-webkit-slider-thumb {
+				-webkit-appearance: none;
+				appearance: none;
+				width: 20px;
+				height: 20px;
+				border-radius: 50%;
+				background: white;
+				cursor: pointer;
+				box-shadow: 0 0 10px green; 
+				position: relative;
+				top: -7px; 
+			}
+			input[type=range]::-moz-range-thumb {
+				width: 20px;
+				height: 20px;
+				border-radius: 50%;
+				background: white;
+				cursor: pointer;
+				box-shadow: 0 0 10px green;
+			}
+			input[type=range]::-ms-thumb {
+				width: 20px;
+				height: 20px;
+				border-radius: 50%;
+				background: white;
+				cursor: pointer;
+				box-shadow: 0 0 20px green;
+			}
+			input[type=range]::-webkit-slider-runnable-track {
+				height: 5px;
+				background: white;
+				box-shadow: 0 0 10px green; 
+			}
+			input[type=range]::-moz-range-track {
+				height: 5px;
+				background: white;
+				box-shadow: 0 0 10px green;
+			}
+			input[type=range]::-ms-track {
+				height: 5px;
+				background: white;
+				border-color: transparent;
+				color: transparent;
+				box-shadow: 0 0 10px green; 
+			}
+			input[type=text] {
+				background-color: black;
+				color: white;
+				font-family: Courier New,Courier,monospace;
+				border: 2px solid green;
+				padding: 5px;
+				box-shadow: 0 0 10px green;
+				text-shadow: 0 0 5px green, 0 0 10px green, 0 0 15px green, 0 0 20px green;
+			}
+			.submit-container {
+				grid-column: 1 / -1;
+				display: flex;
+				justify-content: center;
+			}
+			.submit-btn {
+				background: url('redpill.png') no-repeat center center;
+				background-size: contain;
+				width: 198px;
+				height: 44px;
+				border: none;
+				cursor: pointer;
+				position: relative;
+				color: white;
+				font-size: 20px;
+				text-shadow: 0 0 20px green;
+				text-align: center;
+				line-height: 50px;
+				margin-top: 20px; /* Optional: Add some spacing above the button */
+			}
+			.message {
+				margin: 20px;
+				max-width: 800px;
+				text-align: left;
+				text-shadow: 0 0 5px green, 0 0 10px green, 0 0 15px green, 0 0 20px green;
+			}
+			.footer {
+				position: absolute;
+				bottom: 15px;
+				width: 100%;
+				text-align: center;
+				font-size: 12px;
+				color: green;
+			}
+			.footer a {
+				color: green;
+				text-decoration: none;
+			}
+			.footer a:hover {
+				text-decoration: underline;
+			}
+		</style>
+	</head>
+	<body>
+		<canvas></canvas>
+		<div class="container">
+			<img src="the-reddit.png" alt="The Reddit" height="294" width="512">
+			<div class="message">
+				<p>You’ve been living in a world you think you understand… a feed, a scroll, a stream of opinions and hot takes. But what if I told you that reality is just noise-layered, coded, filtered through karma and chaos? That Reddit is not just a website, but a signal… buried in the static.</p>
+				<p>This is your moment of choice. You can close this tab, forget you ever came here, and return to your regularly-scheduled algorithm. Or you can take the Reddit pill and see the feed for what it truly is: raw, pulsing, unfiltered. Not curated. Not sanitized. Just the truth… raining down, one post at a time.</p>
+				<p><b>The subreddit is yours to choose. The effect, irreversible. Welcome… to The Reddit.</b></p>
+			</div>
+			<form id="matrixForm">
+				<label for="fontSize">TEXT SIZE</label>
+				<span id="fontSizeValue" class="value">16</span>
+				<input id="fontSize" name="fontSize" min="6" max="50" value="16" oninput="document.getElementById('fontSizeValue').innerText = this.value" type="range">
+				
+				<label for="fadeAlpha">FADE ALPHA</label>
+				<span id="fadeAlphaValue" class="value">0.04</span>
+				<input id="fadeAlpha" name="fadeAlpha" min="0.01" max="0.1" step="0.01" value="0.04" oninput="document.getElementById('fadeAlphaValue').innerText = this.value" type="range">
+				
+				<label for="fetchInterval">FETCH INTERVAL</label>
+				<span id="fetchIntervalValue" class="value">60 SECONDS</span>
+				<input id="fetchInterval" name="fetchInterval" min="20" max="300" value="60" oninput="document.getElementById('fetchIntervalValue').innerText = this.value + ' SECONDS'" type="range">
+				
+				<label for="drawInterval">CHARACTER DRAW TIME</label>
+				<span id="drawIntervalValue" class="value">50ms</span>
+				<input id="drawInterval" name="drawInterval" min="10" max="100" value="50" oninput="document.getElementById('drawIntervalValue').innerText = this.value + 'ms'" type="range">
+				
+				<label for="maxContentLength">TRIM POSTS TO</label>
+				<span id="maxContentLengthValue" class="value">100 CHARS</span>
+				<input id="maxContentLength" name="maxContentLength" min="10" max="500" value="150" oninput="document.getElementById('maxContentLengthValue').innerText = this.value + ' CHARS'" type="range">
+				
+				<label for="numPosts">NUMBER OF POSTS</label>
+				<span id="numPostsValue" class="value">100</span>
+				<input id="numPosts" name="numPosts" min="1" max="100" value="100" oninput="document.getElementById('numPostsValue').innerText = this.value" type="range">
+				
+				<label for="numComments">NUMBER OF COMMENTS</label>
+				<span id="numCommentsValue" class="value">100</span>
+				<input id="numComments" name="numComments" min="1" max="100" value="100" oninput="document.getElementById('numCommentsValue').innerText = this.value" type="range">
+				
+				<label for="subreddit">SUBREDDIT</label>
+				<input id="subreddit" name="subreddit" value="all" type="text">
+				<div class="submit-container">
+					<button type="submit" class="submit-btn"></button>
+				</div>
+			</form>
+			<div class="footer">
+				<a href="https://codepen.io/gbnikolov/pen/yLwXaj">MATRIX EFFECT BY GEORGI NIKOLOV</a> | <a href="https://www.n3rding.com">SITE CREATED BY N3RDING</a>
+			</div>
+		</div>
+		
+		<script>
+			// Initialising the canvas
+			var canvas = document.querySelector('canvas'),
+			ctx = canvas.getContext('2d');
+			// Setting the width and height of the canvas
+			canvas.width = window.innerWidth;
+			canvas.height = window.innerHeight;
+			// Setting up the letters
+			var letters = 'ABCDEFGHIJKLMNOPQRSTUVXYZABCDEFGHIJKLMNOPQRSTUVXYZABCDEFGHIJKLMNOPQRSTUVXYZABCDEFGHIJKLMNOPQRSTUVXYZABCDEFGHIJKLMNOPQRSTUVXYZABCDEFGHIJKLMNOPQRSTUVXYZ';
+			letters = letters.split('');
+			// Setting up the columns
+			var fontSize = 10,
+			columns = canvas.width / fontSize;
+			// Setting up the drops
+			var drops = [];
+			for (var i = 0; i < columns; i++) {
+				drops[i] = 1;
+			}
+			// Setting up the draw function
+			function draw() {
+				ctx.fillStyle = 'rgba(0, 0, 0, .1)';
+				ctx.fillRect(0, 0, canvas.width, canvas.height);
+				for (var i = 0; i < drops.length; i++) {
+					var text = letters[Math.floor(Math.random() * letters.length)];
+					ctx.fillStyle = '#0f0';
+					ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+					drops[i]++;
+					if (drops[i] * fontSize > canvas.height && Math.random() > .95) {
+						drops[i] = 0;
+					}
+				}
+			}
+			// Loop the animation
+			setInterval(draw, 33);
+			document.getElementById('matrixForm').addEventListener('submit', function(e) {
+				e.preventDefault();
+				const fontSize = document.getElementById('fontSize').value;
+				const fadeAlpha = document.getElementById('fadeAlpha').value;
+				const fetchInterval = document.getElementById('fetchInterval').value;
+				const drawInterval = document.getElementById('drawInterval').value;
+				const maxContentLength = document.getElementById('maxContentLength').value;
+				const numPosts = document.getElementById('numPosts').value;
+				const numComments = document.getElementById('numComments').value;
+				const subreddit = document.getElementById('subreddit').value;
+				window.location.href = `https://hyttioaoa.com/matrix?fontSize=${fontSize}&fadeAlpha=${fadeAlpha}&fetchInterval=${fetchInterval}&drawInterval=${drawInterval}&maxContentLength=${maxContentLength}&numPosts=${numPosts}&numComments=${numComments}&subreddit=${subreddit}`;
+			});
+		</script>
+	</body>
+</html>
